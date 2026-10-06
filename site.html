@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro-Stats-H2H | L'Analyseur #1 des Parieurs Pro</title>
+    <style>
+        /* ========== NOUVELLES POLICES PREMIUM ========== */
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+            --gold: #FFD700; --gold-dark: #e6c200; --gold-orange: #FFA500;
+            --bg-primary: #07090f; --bg-secondary: #0d111c; --bg-card: #111524;
+            --border: #1f2538; --text-primary: #ffffff; --text-secondary: #9ca3af;
+            --text-muted: #6b7280; --green: #22c55e; --red: #ef4444; --orange: #f97316;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-primary); color: var(--text-primary);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden; line-height: 1.5;
+            background-image: radial-gradient(circle at 20% 0%, rgba(255, 215, 0, 0.08) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+        }
+        .font-display { font-family: 'Sora', sans-serif; }
+        
+        /* ========== EFFET TITRE DORÉ PREMIUM ========== */
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+        
+        /* ========== SCROLL REVEAL ========== */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        /* ========== HEADER STICKY ========== */
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(7, 9, 15, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent; transition: all 0.3s ease;
+        }
+        .header.scrolled { border-bottom-color: var(--border); }
+        .logo { display: flex; align-items: center; gap: 8px; font-family: 'Sora', sans-serif; font-weight: 800; font-size: 15px; color: var(--gold); letter-spacing: -0.3px; }
+        .logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--gold), var(--gold-orange)); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 16px; font-weight: 800; }
+        .header-cta { background: var(--gold); color: #000; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 800; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; }
+        .header-cta:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3); }
+        
+        /* ========== CONTAINER ========== */
+        .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 0 20px; }
+        
+        /* ========== HERO ========== */
+        .hero { padding-top: 100px; padding-bottom: 40px; text-align: center; }
+        .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 215, 0, 0.08); color: var(--gold); padding: 8px 14px; border-radius: 100px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.2); }
+        .badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 34px; font-weight: 800; line-height: 1.15;
+            margin-bottom: 16px; letter-spacing: -1px;
+        }
+        .hero h1 .gold { display: block; }
+        .hero .subtitle { color: var(--text-secondary); font-size: 15px; margin-bottom: 28px; padding: 0 10px; line-height: 1.6; }
+        
+        /* ========== PHONE MOCKUP ========== */
+        .phone-mockup { width: 240px; height: 480px; margin: 0 auto 30px; background: linear-gradient(180deg, #1a1e30, #0d111c); border-radius: 36px; padding: 10px; position: relative; box-shadow: 0 0 0 2px #2a2f45, 0 0 0 6px #0a0c14, 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 60px rgba(255, 215, 0, 0.15); animation: floatPhone 5s ease-in-out infinite; }
+        @keyframes floatPhone { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .phone-mockup::before { content: ''; position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 70px; height: 20px; background: #000; border-radius: 20px; z-index: 10; }
+        .phone-screen { width: 100%; height: 100%; border-radius: 28px; overflow: hidden; background: #0a0c14; position: relative; }
+        .phone-screen img { width: 100%; height: 100%; object-fit: cover; }
+        .phone-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%); z-index: -1; pointer-events: none; }
+        
+        /* ========== BOUTONS CTA ========== */
+        .btn-cta { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 20px; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-orange) 100%); color: #000; text-decoration: none; border-radius: 16px; font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s; border: none; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.25); }
+        .btn-cta::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.5s; }
+        .btn-cta:hover::before { left: 100%; }
+        .btn-cta:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4); }
+        .btn-cta .arrow { transition: transform 0.3s; }
+        .btn-cta:hover .arrow { transform: translateX(5px); }
+        .cta-sub { font-size: 12px; color: var(--text-muted); margin-top: 12px; text-align: center; }
+        
+        /* ========== STATS BAR ========== */
+        .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 20px 0; margin: 30px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stat-item { text-align: center; }
+        .stat-value { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: var(--gold); display: block; margin-bottom: 4px; letter-spacing: -0.5px; }
+        .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        
+        /* ========== SECTIONS ========== */
+        .section { padding: 40px 0; }
+        .section-label { display: inline-block; font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .section-title { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .section-subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
+        
+        /* ========== FEATURES ========== */
+        .features-grid { display: flex; flex-direction: column; gap: 12px; }
+        .feature-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; transition: all 0.3s; }
+        .feature-item:hover { border-color: rgba(255, 215, 0, 0.3); transform: translateX(4px); }
+        .feature-icon { width: 40px; height: 40px; flex-shrink: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05)); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--gold); }
+        .feature-icon svg { width: 20px; height: 20px; fill: currentColor; }
+        .feature-content h4 { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .feature-content p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+        
+        /* ========== COMPARE ========== */
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .compare-col { padding: 20px 15px; border-radius: 16px; position: relative; }
+        .compare-col.bad { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .compare-col.good { background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); }
+        .compare-title { font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; text-align: center; }
+        .compare-col.bad .compare-title { color: var(--red); }
+        .compare-col.good .compare-title { color: var(--green); }
+        .compare-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .compare-list li { font-size: 12px; color: var(--text-secondary); padding-left: 20px; position: relative; line-height: 1.4; }
+        .compare-col.bad .compare-list li::before { content: '✕'; position: absolute; left: 0; color: var(--red); font-weight: 900; }
+        .compare-col.good .compare-list li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 900; }
+        
+        /* ========== STEPS ========== */
+        .steps-grid { display: flex; flex-direction: column; gap: 0; position: relative; }
+        .step-row { display: flex; gap: 16px; position: relative; padding-bottom: 30px; }
+        .step-row:last-child { padding-bottom: 0; }
+        .step-row:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--gold), transparent); }
+        .step-bubble { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-orange)); color: #000; font-family: 'Sora', sans-serif; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); z-index: 1; }
+        .step-content { padding-top: 5px; }
+        .step-content h4 { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+        .step-content p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        
+        /* ========== TESTIMONIALS ========== */
+        .testimonial-list { display: flex; flex-direction: column; gap: 14px; }
+        .testimonial { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 18px; transition: all 0.3s; }
+        .testimonial:hover { border-color: rgba(255, 215, 0, 0.3); transform: translateY(-2px); }
+        .testimonial-stars { display: flex; gap: 2px; margin-bottom: 12px; }
+        .testimonial-stars span { color: var(--gold); font-size: 14px; }
+        .testimonial-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 10px; }
+        .testimonial-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-orange)); display: flex; align-items: center; justify-content: center; color: #000; font-family: 'Sora', sans-serif; font-weight: 800; font-size: 14px; }
+        .testimonial-info { line-height: 1.3; }
+        .testimonial-info h5 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; }
+        .testimonial-info span { font-size: 11px; color: var(--text-muted); }
+        
+        /* ========== GUARANTEE ========== */
+        .guarantee { background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.02)); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 20px; padding: 24px; text-align: center; }
+        .guarantee-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+        .guarantee h3 { font-family: 'Sora', sans-serif; font-size: 18px; color: var(--green); margin-bottom: 8px; font-weight: 800; }
+        .guarantee p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        
+        /* ========== FAQ ========== */
+        .faq-list { display: flex; flex-direction: column; gap: 10px; }
+        details { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: all 0.3s; }
+        details[open] { border-color: rgba(255, 215, 0, 0.3); }
+        summary { padding: 18px; font-size: 14px; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-family: 'Sora', sans-serif; }
+        summary::-webkit-details-marker { display: none; }
+        .faq-icon { width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: rgba(255, 215, 0, 0.1); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; transition: transform 0.3s; }
+        details[open] .faq-icon { transform: rotate(45deg); }
+        details p { padding: 0 18px 18px 18px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; border-top: 1px solid var(--border); margin: 0 18px; padding: 14px 0 18px 0; }
+        
+        /* ========== FINAL CTA ========== */
+        .final-cta { text-align: center; padding: 40px 0 60px; }
+        .final-cta h2 { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .final-cta p { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; }
+        
+        /* ========== FOOTER ========== */
+        .footer { padding: 30px 0; text-align: center; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); line-height: 1.8; }
+        .footer a { color: var(--gold); text-decoration: none; }
+        
+        /* ========== STICKY CTA ========== */
+        .sticky-cta { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; padding: 12px 20px; background: rgba(7, 9, 15, 0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .sticky-cta.visible { transform: translateY(0); }
+        .sticky-cta-inner { max-width: 480px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+        .sticky-info { flex: 1; line-height: 1.2; }
+        .sticky-info .price { font-family: 'Sora', sans-serif; font-weight: 800; color: var(--gold); font-size: 15px; }
+        .sticky-info .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .sticky-cta .btn-cta { width: auto; padding: 14px 22px; font-size: 12px; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+    <div class="logo"><div class="logo-icon">P</div>PRO-STATS</div>
+    <a href="https://digipreneur.mychariow.shop/pro-stats-h2h/checkout" class="header-cta" onclick="fbq('track', 'InitiateCheckout');">Acheter</a>
+</header>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="badge reveal"><span class="badge-dot"></span>Offre limitée - Accès à vie</div>
+        <h1 class="reveal">
+            Arrêtez de parier au hasard.
+            <span class="gold gold-gradient">Analysez comme un Pro.</span>
+        </h1>
+        <p class="subtitle reveal">L'outil mathématique qui analyse les 5 dernières confrontations (H2H) pour vous donner les tendances exactes sur le Basket et le Hockey.</p>
+        
+        <div class="phone-mockup reveal">
+            <div class="phone-glow"></div>
+            <div class="phone-screen">
+                <img src="assets/logo.jpg" alt="Pro-Stats-H2H">
+            </div>
+        </div>
+        
+        <a href="https://digipreneur.mychariow.shop/pro-stats-h2h/checkout" class="btn-cta reveal" onclick="fbq('track', 'InitiateCheckout');">
+            🚀 Obtenir mon Accès VIP
+            <span class="arrow">→</span>
+        </a>
+        <p class="cta-sub reveal">✓ Paiement sécurisé sur Chariow • Accès immédiat</p>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-bar reveal">
+        <div class="stat-item"><span class="stat-value" data-count="340">0</span><span class="stat-label">Équipes</span></div>
+        <div class="stat-item"><span class="stat-value" data-count="10">0</span><span class="stat-label">Championnats</span></div>
+        <div class="stat-item"><span class="stat-value">24/7</span><span class="stat-label">Disponible</span></div>
+    </div>
+
+    <!-- COMPARE -->
+    <section class="section">
+        <div class="reveal">
+            <span class="section-label">La différence</span>
+            <h2 class="section-title">Avant vs. <span class="gold-gradient">Après Pro-Stats</span></h2>
+            <p class="section-subtitle">Ce que change l'utilisation d'un véritable outil d'analyse.</p>
+        </div>
+        <div class="compare-grid reveal">
+            <div class="compare-col bad"><div class="compare-title">Sans l'outil</div><ul class="compare-list"><li>Recherches manuelles</li><li>Calculs à la main</li><li>Paris basés sur l'émotion</li><li>Erreurs de statistiques</li></ul></div>
+            <div class="compare-col good"><div class="compare-title">Avec l'outil</div><ul class="compare-list"><li>Analyse H2H en 1 clic</li><li>Calculs automatiques</li><li>Paris basés sur des données</li><li>Résultats fiables</li></ul></div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section">
+        <div class="reveal">
+            <span class="section-label">Fonctionnalités</span>
+            <h2 class="section-title">Tout ce dont <span class="gold-gradient">vous avez besoin</span></h2>
+            <p class="section-subtitle">Un outil complet, pensé pour les parieurs sérieux.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></div>
+                <div class="feature-content"><h4>Analyse H2H instantanée</h4><p>Obtenez le Min, Max et Moyen des 5 derniers face-à-face en un clic.</p></div>
+            </div>
+            <div class="feature-item reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div>
+                <div class="feature-content"><h4>Prédictions Plus / Moins</h4><p>3 scénarios (Sécurisé, Équilibré, Risqué) avec pourcentages de réussite.</p></div>
+            </div>
+            <div class="feature-item reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg></div>
+                <div class="feature-content"><h4>Base de 340+ équipes</h4><p>NBA, EuroLeague, NHL, KHL et bien plus. Recherche auto-complétée.</p></div>
+            </div>
+            <div class="feature-item reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg></div>
+                <div class="feature-content"><h4>Historique intelligent</h4><p>Sauvegardez vos analyses et retrouvez-les à tout moment.</p></div>
+            </div>
+            <div class="feature-item reveal">
+                <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                <div class="feature-content"><h4>Accès sécurisé par clé</h4><p>Chaque licence est protégée par un code unique et personnel.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STEPS -->
+    <section class="section">
+        <div class="reveal">
+            <span class="section-label">Processus</span>
+            <h2 class="section-title">Comment ça <span class="gold-gradient">marche ?</span></h2>
+            <p class="section-subtitle">Trois étapes simples pour commencer.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-row reveal">
+                <div class="step-bubble">1</div>
+                <div class="step-content"><h4>Achetez votre licence</h4><p>Cliquez sur le bouton et payez en toute sécurité sur Chariow.</p></div>
+            </div>
+            <div class="step-row reveal">
+                <div class="step-bubble">2</div>
+                <div class="step-content"><h4>Recevez votre clé unique</h4><p>Vous recevrez immédiatement un code d'activation par email.</p></div>
+            </div>
+            <div class="step-row reveal">
+                <div class="step-bubble">3</div>
+                <div class="step-content"><h4>Déverrouillez l'application</h4><p>Entrez votre clé et commencez à analyser comme un pro.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section">
+        <div class="reveal">
+            <span class="section-label">Témoignages</span>
+            <h2 class="section-title">Ils ont testé, <span class="gold-gradient">ils adorent</span></h2>
+            <p class="section-subtitle">Ce que disent nos utilisateurs.</p>
+        </div>
+        <div class="testimonial-list">
+            <div class="testimonial reveal">
+                <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <p class="testimonial-text">"J'utilisais FlashScore manuellement pendant des heures. Maintenant en 10 secondes j'ai mes tendances."</p>
+                <div class="testimonial-author"><div class="testimonial-avatar">M</div><div class="testimonial-info"><h5>Marc D.</h5><span>Parieur professionnel</span></div></div>
+            </div>
+            <div class="testimonial reveal">
+                <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <p class="testimonial-text">"L'interface est magnifique et ultra simple. Les prédictions sont claires, même pour un débutant."</p>
+                <div class="testimonial-author"><div class="testimonial-avatar">S</div><div class="testimonial-info"><h5>Sophie L.</h5><span>Passionnée de NBA</span></div></div>
+            </div>
+            <div class="testimonial reveal">
+                <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <p class="testimonial-text">"Le système de pourcentage Plus/Moins est brillant. L'outil indispensable pour tout parieur sérieux."</p>
+                <div class="testimonial-author"><div class="testimonial-avatar">K</div><div class="testimonial-info"><h5>Karim B.</h5><span>Spécialiste Hockey</span></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GUARANTEE -->
+    <section class="section">
+        <div class="guarantee reveal">
+            <span class="guarantee-icon">🛡️</span>
+            <h3>Satisfait ou Remboursé</h3>
+            <p>Nous offrons une garantie satisfait ou remboursé sous 7 jours. Aucun risque pour vous.</p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+        <div class="reveal">
+            <span class="section-label">FAQ</span>
+            <h2 class="section-title">Questions <span class="gold-gradient">fréquentes</span></h2>
+            <p class="section-subtitle">Vous avez une question ?</p>
+        </div>
+        <div class="faq-list">
+            <details class="reveal"><summary>Comment vais-je recevoir mon code ?<span class="faq-icon">+</span></summary><p>Dès que votre paiement est validé sur Chariow, vous recevrez immédiatement un email avec votre clé d'activation unique.</p></details>
+            <details class="reveal"><summary>Est-ce que ça marche sur téléphone ?<span class="faq-icon">+</span></summary><p>Oui, l'application est 100% optimisée pour les mobiles. Vous pouvez l'ajouter à votre écran d'accueil.</p></details>
+            <details class="reveal"><summary>Y a-t-il un abonnement mensuel ?<span class="faq-icon">+</span></summary><p>Non. C'est un paiement unique. Une fois votre clé reçue, vous avez un accès à vie.</p></details>
+            <details class="reveal"><summary>Les prédictions sont-elles garanties ?<span class="faq-icon">+</span></summary><p>Aucun outil ne peut garantir 100% de gains, mais Pro-Stats vous donne un avantage considérable sur les autres parieurs.</p></details>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <h2 class="reveal">Ne laissez plus <span class="gold-gradient">le hasard</span> décider.</h2>
+        <p class="reveal">Rejoignez les parieurs intelligents qui utilisent Pro-Stats-H2H.</p>
+        <a href="https://digipreneur.mychariow.shop/pro-stats-h2h/checkout" class="btn-cta reveal" onclick="fbq('track', 'InitiateCheckout');">
+            🚀 Je veux mon Accès VIP
+            <span class="arrow">→</span>
+        </a>
+        <p class="cta-sub reveal">✓ Paiement sécurisé • Accès à vie • Support 24/7</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2026 Pro-Stats-H2H. Tous droits réservés.</p>
+        <p style="margin-top: 5px;"><a href="#">Conditions</a> • <a href="#">Confidentialité</a> • <a href="#">Contact</a></p>
+    </footer>
+
+</div>
+
+<!-- STICKY CTA -->
+<div class="sticky-cta" id="stickyCta">
+    <div class="sticky-cta-inner">
+        <div class="sticky-info">
+            <div class="price">Accès à vie</div>
+            <div class="label">Paiement unique</div>
+        </div>
+        <a href="https://digipreneur.mychariow.shop/pro-stats-h2h/checkout" class="btn-cta" onclick="fbq('track', 'InitiateCheckout');">Acheter</a>
+    </div>
+</div>
+
+<!-- ================= PIXEL FACEBOOK ================= -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '1170548602303189');fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1170548602303189&ev=PageView&noscript=1"/></noscript>
+<!-- ================= FIN PIXEL FACEBOOK ================= -->
+
+<script>
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+    });
+
+    // Scroll Reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Animated counters
+    const counters = document.querySelectorAll('[data-count]');
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.getAttribute('data-count'));
+                let current = 0;
+                const step = target / 40;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { el.textContent = target + '+'; clearInterval(timer); }
+                    else { el.textContent = Math.floor(current); }
+                }, 30);
+                counterObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    counters.forEach(c => counterObserver.observe(c));
+
+    // Sticky CTA
+    const stickyCta = document.getElementById('stickyCta');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 700) stickyCta.classList.add('visible');
+        else stickyCta.classList.remove('visible');
+    });
+</script>
+
+</body>
+</html>
